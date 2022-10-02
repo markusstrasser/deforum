@@ -26,6 +26,9 @@ from torch import autocast
 import re
 from scipy.ndimage import gaussian_filter
 
+
+import wget
+
 sys.path.extend([
     'src/taming-transformers',
     'src/clip',
