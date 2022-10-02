@@ -26,15 +26,66 @@ from torch import autocast
 import re
 from scipy.ndimage import gaussian_filter
 
+sys.path.extend([
+    'src/taming-transformers',
+    'src/clip',
+    'stable-diffusion/',
+    'k-diffusion',
+    'pytorch3d-lite',
+    'AdaBins',
+    'MiDaS',
+])
 
-custom_config_path = "../models/model.ckpt" #@param {type:"string"}
+import py3d_tools as p3d
+
+from helpers import DepthModel, sampler_fn
+from k_diffusion.external import CompVisDenoiser
+from ldm.util import instantiate_from_config
+from ldm.models.diffusion.ddim import DDIMSampler
+from ldm.models.diffusion.plms import PLMSSampler
+
+
+#@markdown **Model and Output Paths**
+# ask for the link
+print("Local Path Variables:\n")
+
+models_path = "/content/models" #@param {type:"string"}
+output_path = "/content/output" #@param {type:"string"}
+
+#@markdown **Google Drive Path Variables (Optional)**
+mount_google_drive = False #@param {type:"boolean"}
+force_remount = False
+
+if mount_google_drive:
+    from google.colab import drive # type: ignore
+    try:
+        drive_path = "/content/drive"
+        drive.mount(drive_path,force_remount=force_remount)
+        models_path_gdrive = "/content/drive/MyDrive/AI/models" #@param {type:"string"}
+        output_path_gdrive = "/content/drive/MyDrive/AI/StableDiffusion" #@param {type:"string"}
+        models_path = models_path_gdrive
+        output_path = output_path_gdrive
+    except:
+        print("...error mounting drive or with drive path variables")
+        print("...reverting to default path variables")
+
+import os
+os.makedirs(models_path, exist_ok=True)
+os.makedirs(output_path, exist_ok=True)
+
+print(f"models_path: {models_path}")
+print(f"output_path: {output_path}")
+
+# custom_config_path = "../models/model.ckpt" #@param {type:"string"}
+custom_config_path = "" #@param {type:"string"}
+
 
 
 model_config = "v1-inference.yaml" #@param ["custom","v1-inference.yaml"]
-model_checkpoint =  "sd-v1-4-full-ema.ckpt" #@param ["custom","sd-v1-4-full-ema.ckpt","sd-v1-4.ckpt","sd-v1-3-full-ema.ckpt","sd-v1-3.ckpt","sd-v1-2-full-ema.ckpt","sd-v1-2.ckpt","sd-v1-1-full-ema.ckpt","sd-v1-1.ckpt", "robo-diffusion-v1.ckpt","waifu-diffusion-v1-3.ckpt"]
+model_checkpoint =  "custom" #@param ["custom","sd-v1-4-full-ema.ckpt","sd-v1-4.ckpt","sd-v1-3-full-ema.ckpt","sd-v1-3.ckpt","sd-v1-2-full-ema.ckpt","sd-v1-2.ckpt","sd-v1-1-full-ema.ckpt","sd-v1-1.ckpt", "robo-diffusion-v1.ckpt","waifu-diffusion-v1-3.ckpt"]
 if model_checkpoint == "waifu-diffusion-v1-3.ckpt":
     model_checkpoint = "model-epoch05-float16.ckpt"
-custom_checkpoint_path = "" #@param {type:"string"}
+custom_checkpoint_path = "../models/sd-v1-4-full-ema.ckpt" #@param {type:"string"}
 
 load_on_run_all = True #@param {type: 'boolean'}
 half_precision = True # check
@@ -192,23 +243,6 @@ if load_on_run_all and ckpt_valid:
 
 
 
-sys.path.extend([
-    'src/taming-transformers',
-    'src/clip',
-    'stable-diffusion/',
-    'k-diffusion',
-    'pytorch3d-lite',
-    'AdaBins',
-    'MiDaS',
-])
-
-import py3d_tools as p3d
-
-from helpers import DepthModel, sampler_fn
-from k_diffusion.external import CompVisDenoiser
-from ldm.util import instantiate_from_config
-from ldm.models.diffusion.ddim import DDIMSampler
-from ldm.models.diffusion.plms import PLMSSampler
 
 def sanitize(prompt):
     whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ')
@@ -1223,7 +1257,7 @@ def render_image_batch(args):
             display.display(grid_image)
 
 
-def render_animation(args, anim_args):
+def render_animation(args, anim_args, animation_prompts):
     # animations use key framed prompts
     args.prompts = animation_prompts
 
@@ -1434,7 +1468,7 @@ def vid2frames(video_path, frames_path, n=1, overwrite=True):
       print("Converted %d frames" % count)
     else: print("Frames already unpacked")
 
-def render_input_video(args, anim_args):
+def render_input_video(args, anim_args, animation_prompts):
     # create a folder for the video input frames to live in
     video_in_frame_path = os.path.join(args.outdir, 'inputframes') 
     os.makedirs(video_in_frame_path, exist_ok=True)
@@ -1459,9 +1493,9 @@ def render_input_video(args, anim_args):
         args.use_mask = True
         args.overlay_mask = True
 
-    render_animation(args, anim_args)
+    render_animation(args, anim_args, animation_prompts)
 
-def render_interpolation(args, anim_args):
+def render_interpolation(args, anim_args, animation_prompts):
     # animations use key framed prompts
     args.prompts = animation_prompts
 
@@ -1562,5 +1596,3 @@ def render_interpolation(args, anim_args):
     args.init_c = None
 
 
-args_dict = DeforumArgs()
-anim_args_dict = DeforumAnimArgs()

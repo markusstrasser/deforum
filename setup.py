@@ -3,38 +3,7 @@ import subprocess
 sub_p_res = subprocess.run(['nvidia-smi', '--query-gpu=name,memory.total,memory.free', '--format=csv,noheader'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 print(sub_p_res)
 
-#@markdown **Model and Output Paths**
-# ask for the link
-print("Local Path Variables:\n")
 
-models_path = "/content/models" #@param {type:"string"}
-output_path = "/content/output" #@param {type:"string"}
-
-#@markdown **Google Drive Path Variables (Optional)**
-mount_google_drive = False #@param {type:"boolean"}
-force_remount = False
-
-if mount_google_drive:
-    from google.colab import drive # type: ignore
-    try:
-        drive_path = "/content/drive"
-        drive.mount(drive_path,force_remount=force_remount)
-        models_path_gdrive = "/content/drive/MyDrive/AI/models" #@param {type:"string"}
-        output_path_gdrive = "/content/drive/MyDrive/AI/StableDiffusion" #@param {type:"string"}
-        models_path = models_path_gdrive
-        output_path = output_path_gdrive
-    except:
-        print("...error mounting drive or with drive path variables")
-        print("...reverting to default path variables")
-
-import os
-os.makedirs(models_path, exist_ok=True)
-os.makedirs(output_path, exist_ok=True)
-
-print(f"models_path: {models_path}")
-print(f"output_path: {output_path}")
-
-#@markdown **Setup Environment**
 
 setup_environment = True #@param {type:"boolean"}
 print_subprocess = False #@param {type:"boolean"}
