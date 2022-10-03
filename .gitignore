@@ -1,6 +1,8 @@
-stable-diffusion/
-src
-pytorch3d-lite/
-MiDaS
-k-diffusion
-AdaBins
+./pretrained/
+./stable-diffusion/
+./src
+./pytorch3d-lite/
+./MiDaS
+./k-diffusion
+./AdaBins
+pretrained
