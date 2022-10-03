@@ -52,7 +52,7 @@ from ldm.models.diffusion.plms import PLMSSampler
 # ask for the link
 print("Local Path Variables:\n")
 
-models_path = "/content/models" #@param {type:"string"}
+models_path = "../models" #@param {type:"string"}
 output_path = "/content/output" #@param {type:"string"}
 
 #@markdown **Google Drive Path Variables (Optional)**
@@ -85,14 +85,14 @@ custom_config_path = "" #@param {type:"string"}
 
 
 model_config = "v1-inference.yaml" #@param ["custom","v1-inference.yaml"]
-model_checkpoint =  "custom" #@param ["custom","sd-v1-4-full-ema.ckpt","sd-v1-4.ckpt","sd-v1-3-full-ema.ckpt","sd-v1-3.ckpt","sd-v1-2-full-ema.ckpt","sd-v1-2.ckpt","sd-v1-1-full-ema.ckpt","sd-v1-1.ckpt", "robo-diffusion-v1.ckpt","waifu-diffusion-v1-3.ckpt"]
+model_checkpoint =  "sd-v1-4-full-ema.ckpt" #@param ["custom","sd-v1-4-full-ema.ckpt","sd-v1-4.ckpt","sd-v1-3-full-ema.ckpt","sd-v1-3.ckpt","sd-v1-2-full-ema.ckpt","sd-v1-2.ckpt","sd-v1-1-full-ema.ckpt","sd-v1-1.ckpt", "robo-diffusion-v1.ckpt","waifu-diffusion-v1-3.ckpt"]
 if model_checkpoint == "waifu-diffusion-v1-3.ckpt":
     model_checkpoint = "model-epoch05-float16.ckpt"
 custom_checkpoint_path = "../models/sd-v1-4-full-ema.ckpt" #@param {type:"string"}
 
 load_on_run_all = True #@param {type: 'boolean'}
 half_precision = True # check
-check_sha256 = True #@param {type:"boolean"}
+check_sha256 = False #@param {type:"boolean"}
 
 model_map = {
     "sd-v1-4-full-ema.ckpt": {
@@ -1599,3 +1599,5 @@ def render_interpolation(args, anim_args, animation_prompts):
     args.init_c = None
 
 
+args = SimpleNamespace(**args_dict)
+anim_args = SimpleNamespace(**anim_args_dict)
