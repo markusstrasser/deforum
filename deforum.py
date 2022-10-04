@@ -52,7 +52,7 @@ from ldm.models.diffusion.plms import PLMSSampler
 # ask for the link
 print("Local Path Variables:\n")
 
-models_path = "../models" #@param {type:"string"}
+models_path = "../models/" #@param {type:"string"}
 output_path = "/content/output" #@param {type:"string"}
 
 #@markdown **Google Drive Path Variables (Optional)**
@@ -98,7 +98,7 @@ model_map = {
     "sd-v1-4-full-ema.ckpt": {
         'sha256': '14749efc0ae8ef0329391ad4436feb781b402f4fece4883c7ad8d10556d8a36a',
         'url': 'https://huggingface.co/CompVis/stable-diffusion-v-1-2-original/blob/main/sd-v1-4-full-ema.ckpt',
-        'requires_login': True,
+        'requires_login': False,
         },
     "sd-v1-4.ckpt": {
         'sha256': 'fe4efff1e174c627256e44ec2991ba279b3816e364b49f9be2abc0b3ff3f8556',
@@ -158,6 +158,8 @@ print(f"Using config: {ckpt_config_path}")
 # checkpoint path or download
 ckpt_path = custom_checkpoint_path if model_checkpoint == "custom" else os.path.join(models_path, model_checkpoint)
 ckpt_valid = True
+
+print(ckpt_path, "modelpath")
 if os.path.exists(ckpt_path):
     print(f"{ckpt_path} exists")
 elif 'url' in model_map[model_checkpoint]:
@@ -1599,5 +1601,5 @@ def render_interpolation(args, anim_args, animation_prompts):
     args.init_c = None
 
 
-args = SimpleNamespace(**args_dict)
-anim_args = SimpleNamespace(**anim_args_dict)
+# args = SimpleNamespace(**args_dict)
+# anim_args = SimpleNamespace(**anim_args_dict)
