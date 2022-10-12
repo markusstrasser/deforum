@@ -26,7 +26,7 @@
     "use_init": true,
     "strength": 1,
     "strength_0_no_init": true,
-    "init_image": "https://i.postimg.cc/cLRkb7sZ/20220928195558-00167.png",
+    "init_image": "https://i.postimg.cc/mbsMZp47/ivana.jpg",
     "use_mask": false,
     "use_alpha_as_mask": false,
     "mask_file": "https://i.postimg.cc/cLRkb7sZ/20220928195558-00167.png",
@@ -45,16 +45,14 @@
     "init_sample": null,
     "init_c": null,
     "prompts": {
-          "2": "a beautiful woman in her 20s wearing a tuxedo,  sunrise background, painting:`0.3` by Jean Giraud!",
-        "40": "a beautiful woman in her 20s wearing roses, playing chess in the Amazonian jungle,  sunrise background, painting by Jean Giraud!",
-        "80": "a beautiful woman in her 20s meditating in the Himalayas, festive spiritual garments, painting by Jean Giraud!, Dali:`0.2`",
-        "120": "a beautiful woman in her 20s singing in a greek theater, painting by Jean Giraud!",
-         "160": "a beautiful woman in her 20s dancing in on a surrealistic staircase, MC Escher",
-                 "200": "a beautiful woman in her 20s given birth in the desert, drawn by Jean Giraud,"
-
+          "2": "a beautiful woman in her 20s wearing a tuxedo,  sunrise background, painting by Jean Giraud!",
+        "30": "a beautiful woman in her 20s wearing roses, playing chess in the Amazonian jungle,  sunrise background, painting by Jean Giraud!",
+        "60": "a beautiful woman in her 20s meditating in the Himalayas, painting by Jean Giraud, Dali",
+        "250": "young beautiful woman painted by Jean Giraud!!",
+        "150": "young beautiful woman painted by Dali"
     }, 
     "animation_mode": "3D",
-    "max_frames": 200,
+    "max_frames": 300,
     "border": "replicate",
     "angle": "0:(0)",
     "zoom": "0:(0.99)",
